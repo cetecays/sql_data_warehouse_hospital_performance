@@ -30,12 +30,12 @@ BEGIN
 
 		SET @batch_start_time = GETDATE();
 		SET @start_time = GETDATE();
-		PRINT '>> Truncating Table: bronze.survey_survey_results';
-		TRUNCATE TABLE bronze.survey_survey_results;
+		PRINT '>> Truncating Table: bronze.hospital_general_information';
+		TRUNCATE TABLE bronze.hospital_general_information;
 
-		PRINT '>> Inserting data into: bronze.survey_survey_results';
-		BULK INSERT bronze.survey_survey_results
-		FROM 'C:\Users\yanso\OneDrive\Documents\Data Projects\Food Safety Culture\survey_results.csv'
+		PRINT '>> Inserting data into: bronze.hospital_general_information';
+		BULK INSERT bronze.hospital_general_information
+		FROM 'C:\Users\yanso\OneDrive\Documents\Data Projects\Hospital Performance\Hospital_General_Information.csv'
 		WITH (
 			FIRSTROW = 2,
 			FIELDTERMINATOR = ',',
@@ -44,6 +44,23 @@ BEGIN
 		);
 		SET @end_time = GETDATE();
 		PRINT '>> Load Duration: ' + CAST(DATEDIFF(second, @start_time, @end_time) AS NVARCHAR) + ' seconds';
+
+		SET @start_time = GETDATE();
+		PRINT '>> Truncating Table: bronze.unplanned_hospital_visits';
+		TRUNCATE TABLE bronze.unplanned_hospital_visits;
+		
+		PRINT '>> Inserting data into: bronze.unplanned_hospital_visits';
+		BULK INSERT bronze.unplanned_hospital_visits
+		FROM 'C:\Users\yanso\OneDrive\Documents\Data Projects\Hospital Performance\Unplanned_Hospital_Visits-Hospital.csv'
+		WITH (
+			FIRSTROW = 2,
+			FIELDTERMINATOR = ',',
+			ROWTERMINATOR = '0x0A',
+			TABLOCK
+		);
+		SET @end_time = GETDATE();
+		PRINT '>> Load Duration: ' + CAST(DATEDIFF(second, @start_time, @end_time) AS NVARCHAR) + ' seconds';
+
 		SET @batch_end_time = GETDATE();
 		PRINT '=============================================='
 		PRINT 'Bronze Layer has Completed Loading'
@@ -53,9 +70,9 @@ BEGIN
 	BEGIN CATCH
 		PRINT '==========================================='
 		PRINT 'ERROR OCCURED WHILE LOADING BRONZE LAYER'
-		PRINT 'Error Message' + ERROR_MESSAGE();
-		PRINT 'Error Message' + CAST (ERROR_NUMBER() AS NVARCHAR);
-		PRINT 'Error Message' + CAST (ERROR_STATE() AS NVARCHAR);
+		PRINT 'Error Message: ' + ERROR_MESSAGE();
+		PRINT 'Error Message: ' + CAST (ERROR_NUMBER() AS NVARCHAR);
+		PRINT 'Error Message: ' + CAST (ERROR_STATE() AS NVARCHAR);
 		PRINT '==========================================='
 	END CATCH
 END
