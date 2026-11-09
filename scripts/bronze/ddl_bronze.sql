@@ -79,3 +79,11 @@ CREATE TABLE bronze.unplanned_hospital_visits (
 	uhv_start_date NVARCHAR(MAX),
 	uhv_end_date NVARCHAR(MAX)
 );
+
+IF OBJECT_ID ('bronze.footnote_crosswalk') IS NOT NULL
+	DROP TABLE bronze.footnote_crosswalk
+
+CREATE TABLE bronze.footnote_crosswalk (
+	fc_footnote NVARCHAR(MAX),
+	fc_footnote_text NVARCHAR(MAX)
+);
